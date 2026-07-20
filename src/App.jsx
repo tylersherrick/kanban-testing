@@ -1,10 +1,11 @@
 import "./App.css";
-import { DragDropProvider, DragOverlay } from "@dnd-kit/react";
+import { DragDropProvider } from "@dnd-kit/react";
 import { useState } from "react";
-import DraggableTask from "./components/DraggableTask";
-import TaskCard from "./components/TaskCard";
-import Column from "./components/Column";
-import TrashZone from "./components/TrashZone";
+import DeleteModal from "./components/DeleteModal";
+import Board from "./components/Board";
+import TaskDetailsModal from "./components/TaskDetailsModal";
+import Toolbox from "./components/Toolbox";
+import TaskOverlay from "./components/TaskOverlay";
 
 function App() {
   const [tasks, setTasks] = useState([]);
@@ -126,229 +127,36 @@ function App() {
       }}
     >
       <div className="app">
-        <aside className="toolbox">
-          <h2>Toolbox</h2>
+        <Toolbox
+          taskName={taskName}
+          setTaskName={setTaskName}
+        />
 
-          <DraggableTask
-            id="task-template"
-            title={taskName}
-            setTitle={setTaskName}
-          />
-
-          <TrashZone />
-        </aside>
-
-        <main className="board">
-          {["todo", "doing", "done"].map((column) => (
-            <Column
-              key={column}
-              id={column}
-              title={
-                column.charAt(0).toUpperCase() +
-                column.slice(1)
-              }
-            >
-              {tasks
-                .filter((task) => task.column === column)
-                .map((task) => (
-                  <TaskCard
-                    key={task.id}
-                    task={task}
-                    onClick={setSelectedTask}
-                  />
-                ))}
-            </Column>
-          ))}
-        </main>
+        <Board
+          tasks={tasks}
+          setSelectedTask={setSelectedTask}
+        />
       </div>
 
+      <TaskOverlay activeTask={activeTask} />
 
-      <DragOverlay dropAnimation={null}>
-        {activeTask ? (
-          <div className="task-card">
-            {activeTask.title}
-          </div>
-        ) : null}
-      </DragOverlay>
-
-
-      {/* Task Details Modal */}
       {selectedTask && (
-        <div className="modal-backdrop">
-          <div className="modal">
-            <h2>{selectedTask.title}</h2>
-
-            <p>
-              <strong>Current Stage:</strong>
-              <br />
-              {selectedTask.column.charAt(0).toUpperCase() +
-                selectedTask.column.slice(1)}
-            </p>
-
-
-            <label>
-              <strong>Priority</strong>
-            </label>
-
-            <select
-              value={selectedTask.priority || "Medium"}
-              onChange={(e) =>
-                setSelectedTask({
-                  ...selectedTask,
-                  priority: e.target.value,
-                })
-              }
-            >
-              <option>High</option>
-              <option>Medium</option>
-              <option>Low</option>
-            </select>
-
-
-            <br />
-
-
-            <label>
-              <strong>Add Note</strong>
-            </label>
-
-            <textarea
-              value={newNote}
-              placeholder="Write an update..."
-              onChange={(e) =>
-                setNewNote(e.target.value)
-              }
-            />
-
-            <button onClick={addNote}>
-              Add Note
-            </button>
-
-
-            {selectedTask.notes?.length > 0 && (
-              <>
-                <br />
-
-                <strong>Notes History</strong>
-
-                {selectedTask.notes.map((note) => (
-                  <div
-                    key={note.id}
-                    className="note-card"
-                  >
-                    <p>{note.text}</p>
-                    <small>{note.date}</small>
-                  </div>
-                ))}
-              </>
-            )}
-
-
-            <div className="modal-buttons">
-              <button
-                onClick={() => {
-                  setSelectedTask(null);
-                  setNewNote("");
-                }}
-              >
-                Cancel
-              </button>
-
-              <button onClick={updateTask}>
-                Save
-              </button>
-            </div>
-          </div>
-        </div>
+        <TaskDetailsModal
+          selectedTask={selectedTask}
+          setSelectedTask={setSelectedTask}
+          newNote={newNote}
+          setNewNote={setNewNote}
+          addNote={addNote}
+          updateTask={updateTask}
+        />
       )}
 
-
-      {/* Delete Confirmation Modal */}
       {taskToDelete && (
-        <div className="modal-backdrop">
-          <div className="modal">
-            <h2>Delete Task?</h2>
-
-            <p>
-              Are you sure you want to delete this task?
-            </p>
-
-            <br />
-
-            <p>
-              <strong>Task:</strong>
-              <br />
-              "{taskToDelete.title}"
-            </p>
-
-            <br />
-
-            <p>
-              <strong>Current Stage:</strong>
-              <br />
-              {taskToDelete.column.charAt(0).toUpperCase() +
-                taskToDelete.column.slice(1)}
-            </p>
-
-            <br />
-
-            <p>
-              <strong>Priority:</strong>
-              <br />
-              {taskToDelete.priority || "Medium"}
-            </p>
-
-
-            {taskToDelete.notes?.length > 0 && (
-              <>
-                <br />
-
-                <strong>Notes History:</strong>
-
-                {taskToDelete.notes.map((note) => (
-                  <div
-                    key={note.id}
-                    className="note-card"
-                  >
-                    <p>{note.text}</p>
-                    <small>{note.date}</small>
-                  </div>
-                ))}
-              </>
-            )}
-
-
-            <br />
-
-            <p className="delete-warning">
-              This action cannot be undone.
-            </p>
-
-
-            <div className="modal-buttons">
-              <button
-                onClick={() => setTaskToDelete(null)}
-              >
-                Cancel
-              </button>
-
-              <button
-                className="delete-btn"
-                onClick={() => {
-                  setTasks((prev) =>
-                    prev.filter(
-                      (task) => task.id !== taskToDelete.id
-                    )
-                  );
-
-                  setTaskToDelete(null);
-                }}
-              >
-                Delete
-              </button>
-            </div>
-          </div>
-        </div>
+        <DeleteModal
+          taskToDelete={taskToDelete}
+          setTaskToDelete={setTaskToDelete}
+          setTasks={setTasks}
+        />
       )}
     </DragDropProvider>
   );
