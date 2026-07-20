@@ -5,8 +5,8 @@
 body {
   margin: 0;
   font-family: Arial, Helvetica, sans-serif;
-  background: #f6f7fb;
-  color: #1f2937;
+  background: #eef2f3;
+  color: #4a5765;
 }
 
 .app {
@@ -14,22 +14,20 @@ body {
   height: 100vh;
 }
 
-
 /* Sidebar */
 .toolbox {
   width: 220px;
   padding: 20px;
-  background: white;
-  border-right: 1px solid #ddd;
-
+  background: #ffffff;
+  border-right: 1px solid #cbd5d8;
   display: flex;
   flex-direction: column;
 }
 
 .toolbox h2 {
   margin-top: 0;
+  color: #504d63;
 }
-
 
 /* Board */
 .board {
@@ -39,46 +37,36 @@ body {
   padding: 20px;
 }
 
-
 /* Columns */
 .column {
   flex: 1;
-
-  background: #eef0f5;
-  border: 2px dashed #bbb;
+  background: #dfe7e8;
+  border: 2px dashed #819aa3;
   border-radius: 12px;
-
   padding: 12px;
   min-height: 500px;
-
   transition: 0.2s ease;
 }
 
 .column h2 {
   margin-top: 0;
+  color: #4a5765;
 }
 
-
-/* Highlight column when dragging */
 .column.active {
-  border-color: #6366f1;
-  background: #e0e7ff;
+  border-color: #93c591;
+  background: #e6f2e5;
 }
 
-
-/* Draggable task creator */
+/* Task creator */
 .task {
   width: 100%;
   padding: 12px;
-
   background: white;
-  border: 1px solid #ddd;
+  border: 1px solid #cbd5d8;
   border-radius: 10px;
-
   cursor: grab;
-
   box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease;
@@ -86,7 +74,7 @@ body {
 
 .task:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+  box-shadow: 0 6px 14px rgba(74,87,101,0.15);
 }
 
 .task:active {
@@ -95,27 +83,19 @@ body {
 
 .task input {
   width: 100%;
-
   border: none;
   outline: none;
-
   font-size: 14px;
-  background: transparent;
 }
 
-
-/* Tasks inside columns */
+/* Task Cards */
 .task-card {
   background: white;
-
-  border: 1px solid #ddd;
+  border: 1px solid #d5dddf;
   border-radius: 10px;
-
   padding: 12px;
   margin-top: 10px;
-
-  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
-
+  box-shadow: 0 2px 5px rgba(74,87,101,0.12);
   transition:
     transform 0.15s ease,
     box-shadow 0.15s ease;
@@ -123,35 +103,218 @@ body {
 
 .task-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  box-shadow: 0 6px 12px rgba(74,87,101,0.18);
 }
 
-
-/* Delete drop zone */
+/* Trash */
 .trash-zone {
   margin-top: 250px;
-
   width: 100%;
   height: 120px;
-
   display: flex;
   align-items: center;
   justify-content: center;
-
   border: 2px dashed #ef4444;
   border-radius: 12px;
-
-  color: #ef4444;
+  color: #dc2626;
   background: #fef2f2;
-
   font-size: 14px;
   font-weight: 600;
-
-  transition: all 0.2s ease;
 }
 
 .trash-zone.active {
   background: #fee2e2;
-  border-color: #dc2626;
+  border-color: #b91c1c;
   transform: scale(1.03);
+}
+
+/* Modal */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(80,77,99,0.45);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+}
+
+.modal {
+  width: 400px;
+  max-width: 90%;
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 18px 40px rgba(74,87,101,0.25);
+  animation: modalFade .18s ease-out;
+}
+
+.modal h2 {
+  color: #504d63;
+}
+
+.modal p {
+  color: #4a5765;
+  line-height: 1.5;
+}
+
+.modal strong {
+  color: #504d63;
+}
+
+/* Buttons */
+.modal-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 28px;
+}
+
+.modal-buttons button {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.modal-buttons button:first-child {
+  background: #dfe7e8;
+  color: #4a5765;
+}
+
+.modal-buttons button:first-child:hover {
+  background: #cbd5d8;
+}
+
+.modal-buttons button:last-child {
+  background: #4a5765;
+  color: white;
+}
+
+.modal-buttons button:last-child:hover {
+  background: #504d63;
+}
+
+/* Priority Badges */
+.priority {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.priority.high {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.priority.medium {
+  background: #dfe7e8;
+  color: #4a5765;
+}
+
+.priority.low {
+  background: #dcfce7;
+  color: #3f7d3c;
+}
+
+/* Inputs */
+.modal label {
+  display: block;
+  margin-top: 16px;
+  margin-bottom: 6px;
+  color: #4a5765;
+}
+
+.modal select,
+.modal textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #cbd5d8;
+  font-size: 14px;
+}
+
+.modal textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.modal textarea:focus,
+.modal select:focus {
+  outline: none;
+  border-color: #819aa3;
+}
+
+/* Task title */
+.task-title {
+  font-weight: 600;
+  color: #504d63;
+}
+
+/* Delete warning */
+.delete-warning {
+  margin-top: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #fef2f2;
+  color: #b91c1c;
+  font-weight: 700;
+  border-left: 4px solid #dc2626;
+}
+
+/* Notes Timeline */
+.note-card {
+  margin-top: 12px;
+  padding: 12px;
+  background: #f3f7f3;
+  border: 1px solid #d5dddf;
+  border-radius: 10px;
+  border-left: 4px solid #93c591;
+}
+
+.note-card:hover {
+  background: #e6f2e5;
+}
+
+.note-card p {
+  margin: 0 0 8px;
+}
+
+.note-card small {
+  color: #819aa3;
+}
+
+/* Add note button */
+.modal button:not(.delete-btn) {
+  background: #819aa3;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin-top: 12px;
+  margin-bottom: 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.modal button:not(.delete-btn):hover {
+  background: #4a5765;
+}
+
+@keyframes modalFade {
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
