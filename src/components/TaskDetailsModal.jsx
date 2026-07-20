@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 function TaskDetailsModal({
   selectedTask,
   setSelectedTask,
@@ -6,6 +8,24 @@ function TaskDetailsModal({
   addNote,
   updateTask,
 }) {
+  const [notesNewestFirst, setNotesNewestFirst] = useState(true);
+  const [noteToDelete, setNoteToDelete] = useState(null);
+
+  const sortedNotes = notesNewestFirst
+    ? selectedTask.notes?.slice().reverse()
+    : selectedTask.notes;
+
+  function deleteNote() {
+    setSelectedTask({
+      ...selectedTask,
+      notes: selectedTask.notes.filter(
+        (note) => note.id !== noteToDelete.id
+      ),
+    });
+
+    setNoteToDelete(null);
+  }
+
   return (
     <div className="modal-backdrop">
       <div className="modal">
@@ -52,14 +72,61 @@ function TaskDetailsModal({
 
         {selectedTask.notes?.length > 0 && (
           <div className="notes-section">
-            <strong>Notes History</strong>
+            <div className="notes-header">
+              <strong>Notes History</strong>
 
-            {selectedTask.notes.map((note) => (
+              <button
+                className="sort-button"
+                onClick={() =>
+                  setNotesNewestFirst(!notesNewestFirst)
+                }
+              >
+                {notesNewestFirst
+                  ? "↓ Newest First"
+                  : "↑ Oldest First"}
+              </button>
+            </div>
+
+            {sortedNotes.map((note) => (
               <div key={note.id} className="note-card">
+                <button
+                  className="delete-note-button"
+                  onClick={() => setNoteToDelete(note)}
+                >
+                  ✕
+                </button>
+
                 <p>{note.text}</p>
                 <small>{note.date}</small>
               </div>
             ))}
+          </div>
+        )}
+
+        {noteToDelete && (
+          <div className="modal-backdrop">
+            <div className="modal">
+              <h2>Delete Note?</h2>
+
+              <p>
+                Are you sure you want to remove this note?
+              </p>
+
+              <div className="modal-buttons">
+                <button
+                  onClick={() => setNoteToDelete(null)}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  className="delete-btn"
+                  onClick={deleteNote}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
           </div>
         )}
 

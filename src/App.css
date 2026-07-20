@@ -16,7 +16,7 @@ body {
 
 /* Sidebar */
 .toolbox {
-  width: 220px;
+  width: 280px;
   padding: 20px;
   background: white;
   border-right: 1px solid #cbd5d8;
@@ -143,6 +143,8 @@ body {
 .modal {
   width: 400px;
   max-width: 90%;
+  max-height: 90vh;
+  overflow: hidden;
   background: white;
   border-radius: 14px;
   padding: 24px;
@@ -298,6 +300,47 @@ body {
   border: 1px solid #d5dddf;
   border-radius: 10px;
   border-left: 4px solid #93c591;
+  position: relative;
+}
+
+.note-card {
+  position: relative;
+}
+
+.delete-note-button {
+  position: absolute;
+  right: 8px;
+  top: 6px;
+  border: none;
+  background: transparent;
+  color: #819aa3;
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  line-height: 1;
+}
+
+.delete-note-button:hover {
+  color: #dc2626;
+}
+
+.notes-section {
+  max-height: 250px;
+  overflow-y: auto;
+  margin-top: 10px;
+  padding-right: 6px;
+}
+
+.notes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.notes-header button {
+  margin: 0;
+  padding: 6px 10px;
+  font-size: 12px;
 }
 
 .note-card p {
